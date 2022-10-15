@@ -1,4 +1,6 @@
 package com.todolist;
+import com.facebook.react.BuildConfig;
+
 
 import android.app.Application;
 import android.content.Context;
