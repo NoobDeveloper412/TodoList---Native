@@ -47,7 +47,7 @@ export default class AddListModal extends Component {
       );
     });
   }
-  render(closeModal) {
+  render() {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <TouchableOpacity

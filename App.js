@@ -21,11 +21,18 @@ export default class App extends React.Component {
   toggleAddTodoModal() {
     this.setState({ addTodoVisible: !this.state.addTodoVisible });
   }
+  renderList = (list) => {
+    return <TodoList list={list} />;
+  };
   render() {
     return (
       <View style={styles.container}>
-        <Modal animationType="slide" visible={this.state.addTodoVisible} onRequestClose={()=>this.toggleAddTodoModal()}>
-          <AddListModal closeModal={()=>this.toggleAddTodoModal()} />
+        <Modal
+          animationType="slide"
+          visible={this.state.addTodoVisible}
+          onRequestClose={() => this.toggleAddTodoModal()}
+        >
+          <AddListModal closeModal={() => this.toggleAddTodoModal()} />
         </Modal>
         <View style={{ flexDirection: "row" }}>
           <Divider style={styles.divider} />
@@ -37,7 +44,10 @@ export default class App extends React.Component {
         </View>
 
         <View style={{ marginVertical: 48 }}>
-          <TouchableOpacity style={styles.addList} onPress={()=>this.toggleAddTodoModal()}>
+          <TouchableOpacity
+            style={styles.addList}
+            onPress={() => this.toggleAddTodoModal()}
+          >
             <AntDesign name="plus" size={16} color={colors.blue}></AntDesign>
           </TouchableOpacity>
           <Text style={styles.add}>Add list</Text>
@@ -48,7 +58,7 @@ export default class App extends React.Component {
             keyExtractor={(item) => item.name}
             horizontal={true}
             showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => <TodoList list={item} />}
+            renderItem={({ item }) => this.renderList(item)}
           />
         </View>
       </View>
