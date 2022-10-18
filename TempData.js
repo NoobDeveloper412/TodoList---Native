@@ -1,5 +1,6 @@
 const TempData = [
     {
+        id:1,
         name:'Plan a trip',
         color:'#24a6d9',
         todos:[
@@ -23,6 +24,7 @@ const TempData = [
         ]
     },
     {
+        id:2,
         name:'Dont',
         color:'#a7cbd9',
         todos:[

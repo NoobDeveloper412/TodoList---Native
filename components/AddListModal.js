@@ -6,12 +6,11 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import React, { Component } from "react";
+import React from "react";
 import colors from "../colors";
 import { AntDesign } from "@expo/vector-icons";
-import TempData from "../TempData";
 
-export default class AddListModal extends Component {
+export default class AddListModal extends React.Component {
   backgroundColors = [
     "#5cd859",
     "#24a6d9",
@@ -21,21 +20,20 @@ export default class AddListModal extends Component {
     "#d85963",
     "#d88559",
   ];
-  createTodo = () => {
-    const { name, color } = this.state;
-    TempData.push({
-      name,
-      color,
-      todos: [],
-    });
-
-    this.setState({ name: "" });
-    this.props.closeModal();
-  };
   state = {
     name: "",
     color: this.backgroundColors[0],
   };
+
+  createTodo = () => {
+    const { name, color } = this.state;
+    const list = { name, color };
+    this.props.addList(list);
+
+    this.setState({ name: "" });
+    this.props.closeModal();
+  };
+
   renderColors() {
     return this.backgroundColors.map((color) => {
       return (

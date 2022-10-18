@@ -23,7 +23,11 @@ class TodoList extends React.Component {
           visible={this.state.showListVisisble}
           onRequestClose={() => this.toggleListModal()}
         >
-          <TodoModal list={list} closeModal={() => this.toggleListModal()} />
+          <TodoModal
+            list={list}
+            closeModal={() => this.toggleListModal()}
+            updateList={this.props.updateList}
+          />
         </Modal>
         <TouchableOpacity
           onPress={() => this.toggleListModal()}
