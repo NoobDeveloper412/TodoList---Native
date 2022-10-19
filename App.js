@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
   Modal,
 } from "react-native";
 import Divider from "react-native-divider";
@@ -13,20 +14,42 @@ import TempData from "./TempData.js";
 import { AntDesign } from "@expo/vector-icons";
 import TodoList from "./components/Todolist.js";
 import AddListModal from "./components/AddListModal.js";
+import Fire from "./Fire.js";
+import firebase from "firebase";
 
 export default class App extends React.Component {
   state = {
     addTodoVisible: false,
-    lists: TempData,
+    lists: [],
+    user: {},
+    loading: true,
   };
 
   toggleAddTodoModal() {
     this.setState({ addTodoVisible: !this.state.addTodoVisible });
   }
 
+  componentDidMount() {
+    let fire = new Fire((error, user) => {
+      if (error) {
+        return alert(error);
+      }
+      fire.getLists((lists) => {
+        this.setState({ lists, user }, () => {
+          this.setState({ loading: false });
+        });
+      });
+      this.setState({ user });
+    });
+  }
+
   renderList = (list) => {
     return <TodoList list={list} updateList={this.updateList} />;
   };
+
+  componentWillUnmount(){
+    firebase.detach()
+  }
 
   addList = (list) => {
     this.setState({
@@ -44,6 +67,16 @@ export default class App extends React.Component {
     });
   };
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator
+            size="large"
+            color={colors.blue}
+          ></ActivityIndicator>
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         <Modal
@@ -56,6 +89,9 @@ export default class App extends React.Component {
             addList={this.addList}
           />
         </Modal>
+        <View>
+          <Text>User: {this.state.user.uid}</Text>
+        </View>
         <View style={{ flexDirection: "row" }}>
           <Divider style={styles.divider} />
           <Text style={styles.title}>
@@ -77,11 +113,11 @@ export default class App extends React.Component {
         <View style={{ height: 275, paddingLeft: 32 }}>
           <FlatList
             data={this.state.lists}
-            keyExtractor={(item) => item.name}
+            keyExtractor={(item) => item.id.toString()}
             horizontal={true}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) => this.renderList(item)}
-            keyboardShouldPersistTaps='always'
+            keyboardShouldPersistTaps="always"
           />
         </View>
       </View>

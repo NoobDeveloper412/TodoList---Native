@@ -88,7 +88,7 @@ export class TodoModal extends React.Component {
             <FlatList
               data={list.todos}
               renderItem={({ item, index }) => this.renderTodo(item, index)}
-              keyExtractor={(item) => item.title}
+              keyExtractor={(_, index) => index.toString()}
               contentContainerStyle={{
                 paddingHorizontal: 32,
                 paddingVertical: 64,
