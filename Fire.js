@@ -31,15 +31,11 @@ class Fire {
     });
   }
   getLists(callback) {
-    let ref = Firebase.firestore()
-      .collection("user")
-      .doc(this.userId)
-      .collection("list");
-      console.log(ref)
+    let ref = this.ref.orderBy("name");
     this.unsubscribe = ref.onSnapshot((snapshot) => {
       let lists = [];
       snapshot.forEach((doc) => {
-        console.log(...doc.data());
+        console.log(doc.data);
         lists.push({ id: doc.id, ...doc.data() });
       });
 
@@ -47,12 +43,29 @@ class Fire {
     });
   }
 
+  addList(list) {
+    let ref = this.ref;
+    ref.add(list);
+  }
+
+  updateList(list) {
+    let ref = this.ref;
+    ref.doc(list.id).update(list);
+  }
+
   get userId() {
     return Firebase.auth().currentUser.uid;
   }
 
-  detach(){
-    this.unsubscribe()
+  get ref() {
+    return Firebase.firestore()
+      .collection("users")
+      .doc(this.userId)
+      .collection("list");
+  }
+
+  detach() {
+    this.unsubscribe();
   }
 }
 export default Fire;

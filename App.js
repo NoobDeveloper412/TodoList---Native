@@ -15,7 +15,6 @@ import { AntDesign } from "@expo/vector-icons";
 import TodoList from "./components/Todolist.js";
 import AddListModal from "./components/AddListModal.js";
 import Fire from "./Fire.js";
-import firebase from "firebase";
 
 export default class App extends React.Component {
   state = {
@@ -23,6 +22,7 @@ export default class App extends React.Component {
     lists: [],
     user: {},
     loading: true,
+    fire:{}
   };
 
   toggleAddTodoModal() {
@@ -30,7 +30,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    let fire = new Fire((error, user) => {
+     let fire = new Fire((error, user) => {
       if (error) {
         return alert(error);
       }
@@ -39,7 +39,7 @@ export default class App extends React.Component {
           this.setState({ loading: false });
         });
       });
-      this.setState({ user });
+      this.setState({ user, fire });
     });
   }
 
@@ -47,24 +47,19 @@ export default class App extends React.Component {
     return <TodoList list={list} updateList={this.updateList} />;
   };
 
-  componentWillUnmount(){
-    firebase.detach()
+  componentWillUnmount() {
+    this.state.fire.detach();
   }
 
   addList = (list) => {
-    this.setState({
-      lists: [
-        ...this.state.lists,
-        { ...list, id: this.state.lists.length + 1, todos: [] },
-      ],
+    this.state.fire.addList({
+      name: list.name,
+      color: list.color,
+      todos: [],
     });
   };
   updateList = (list) => {
-    this.setState({
-      lists: this.state.lists.map((item) => {
-        return item.id === list.id ? list : item;
-      }),
-    });
+    this.state.fire.updatelist(list)
   };
   render() {
     if (this.state.loading) {
@@ -89,9 +84,6 @@ export default class App extends React.Component {
             addList={this.addList}
           />
         </Modal>
-        <View>
-          <Text>User: {this.state.user.uid}</Text>
-        </View>
         <View style={{ flexDirection: "row" }}>
           <Divider style={styles.divider} />
           <Text style={styles.title}>
